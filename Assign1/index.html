@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Memory Card Game of numbers to train 
+    memorization skills.">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Custom font "Alegreya" -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <title> Memory Card Game </title>
+</head>
+<body>
+    <h1>Memory Card Game</h1>
+
+    <div class="statboard">
+            <span id="moves">Card(s) flipped: 0</span>
+            <span id="score">Current score: 0</span>
+    </div>
+
+    <div class="gamewrapper">
+        <div>wow</div>
+        <select name="Difficulty level" id="diffLevel">
+            <option value="6">Easy</option>
+            <option value="9">Medium</option>
+            <option value="12">Hard</option>
+        </select>
+        <button onclick="start()">This is a button</button>
+        <div id="gamebody">
+            <!-- Cards will be added, tracked and generated via the script -->
+        </div>
+    </div>
+    <!-- JS Script -->
+   <script src="script.js"></script>
+</body>
+</html>

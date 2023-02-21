@@ -1,0 +1,66 @@
+body {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(to top left, #9b59b6, #1abc9c) no-repeat fixed;
+    font-family: "Alegreya", sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+.statboard{
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Give margin to all child elements */
+.statboard > * {
+    margin: 10px;
+    padding:30px;
+}
+
+.gamewrapper{
+    display:grid;
+    justify-items: center;
+    text-align: center;
+    margin: 20px;
+}
+
+.gamewrapper > * {
+    margin: 10px;
+}
+
+#gamebody{
+    width: 380px;
+    text-align: center;
+    justify-items: center;
+    align-items: center;
+    margin: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 1em;
+}
+
+#gamebody img{
+    width: 120px;
+    height: auto;
+    backface-visibility: hidden;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* .card{
+    transform: translate(-50%, -50%);
+} */
+
+.flip {
+-ms-transform: rotateY(180deg);
+-webkit-transform: rotateY(180deg);
+-moz-transform: rotateY(180deg);
+-o-transform: rotateY(180deg);
+transform: rotateY(180deg);
+}
