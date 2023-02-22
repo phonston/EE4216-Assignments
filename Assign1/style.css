@@ -1,9 +1,44 @@
 body {
     height: 100%;
     width: 100%;
-    background: linear-gradient(to top left, #9b59b6, #1abc9c) no-repeat fixed;
     font-family: "Alegreya", sans-serif;
 }
+
+.parallax > use {
+    animation: move-forever 25s cubic-bezier(.55,.5,.45,.5)     infinite;
+  }
+  .parallax > use:nth-child(1) {
+    animation-delay: -2s;
+    animation-duration: 7s;
+  }
+  .parallax > use:nth-child(2) {
+    animation-delay: -3s;
+    animation-duration: 10s;
+  }
+  .parallax > use:nth-child(3) {
+    animation-delay: -4s;
+    animation-duration: 13s;
+  }
+  .parallax > use:nth-child(4) {
+    animation-delay: -5s;
+    animation-duration: 20s;
+  }
+  @keyframes move-forever {
+    0% {
+     transform: translate3d(-90px,0,0);
+    }
+    100% { 
+      transform: translate3d(85px,0,0);
+    }
+  }
+
+@media (max-width: 768px) {
+    .waves {
+      height:40px;
+      min-height:40px;
+    }
+  }
+
 
 h1 {
     text-align: center;
@@ -33,14 +68,24 @@ h1 {
 }
 
 #gamebody{
-    width: 380px;
-    text-align: center;
+    width: 70%;
     justify-items: center;
-    align-items: center;
+    align-items: left;
     margin: 20px;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     row-gap: 1em;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (min-width: 1100px){
+    #gamebody {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .frontFace .backFace{
+        max-width: 100%;
+        max-height: 100%;
+    }
 }
 
 #gamebody img{
@@ -53,14 +98,44 @@ h1 {
     display: none !important;
 }
 
-/* .card{
-    transform: translate(-50%, -50%);
-} */
+.card {
+    background-color: transparent;
+    perspective: 1000px; /* Remove this if you don't want the 3D effect */
+}
 
-.flip {
--ms-transform: rotateY(180deg);
--webkit-transform: rotateY(180deg);
--moz-transform: rotateY(180deg);
--o-transform: rotateY(180deg);
-transform: rotateY(180deg);
+.content{
+    display: grid;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.content > * {
+    grid-area: 1 / 1;
+}
+
+.card .flip {
+    transform: rotateY(180deg);
+  }
+
+.frontFace .backFace {
+    max-width: 60%;
+    max-height: 60%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.backFace {
+    transform: rotateY(180deg);
+}
+
+#gameOver{
+    display: grid;
+    margin: 20px;
+    justify-items: center;
+    text-align: center;
+}
+
+#gameOver > * {
+    margin: 10px;
 }
