@@ -2,6 +2,11 @@ body {
     height: 100%;
     width: 100%;
     font-family: "Alegreya", sans-serif;
+    /* each of the radial gradients add a color to the background at the specified positions */
+    background: radial-gradient(at 18% 99%, rgb(223, 229, 113) 0px, transparent 50%) repeat scroll 0% 0%,
+    radial-gradient(at 79% 82%, rgb(233, 109, 131) 0px, transparent 50%) repeat scroll 0% 0%,
+    radial-gradient(at 96% 10%, rgb(222, 81, 251) 0px, transparent 50%) repeat scroll 0% 0%,    
+    radial-gradient(at 42% 20%, rgb(116, 240, 251) 0px, transparent 50%) repeat scroll 0% 0%;
 }
 
 .parallax > use {
