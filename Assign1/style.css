@@ -44,7 +44,7 @@ h1 {
     text-align: center;
 }
 
-.statboard{
+.statboard, .rules{
     align-items: center;
     justify-content: center;
     text-align: center;

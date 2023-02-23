@@ -2,8 +2,9 @@ let lockBoard = false;
 let flipCounter = 0;
 // Could implement an array system instead for more flexibility
 let firstCard, secondCard, thirdCard;
-let clicks = 0;
-let score = 0;
+let clicks = 0,
+  score = 0,
+  correctPairs = 0;
 let finalScore;
 // Variable used to check if the cards are currently flipping
 // to prevent users from clicking cards too quickly
@@ -11,6 +12,11 @@ let flipping = false;
 let time;
 let myVar;
 /* ---------------------------- Helper Functions ---------------------------- */
+function updateScore(change) {
+  score += change;
+  document.querySelector("#score").innerHTML = `Current score: ${score}`;
+}
+
 function getRandomArbitrary(min, max) {
   // Generate a random number between min and max
   return Math.random() * (max - min) + min;
@@ -45,14 +51,15 @@ function Timer() {
 
 // Reset variables
 function resetHelper() {
-  clicks = 0;
-  score = 0;
-  flipCounter = 0;
+  [clicks, score, flipCounter, correctPairs, time, flipping] = [
+    0,
+    0,
+    0,
+    0,
+    true,
+  ];
   reset();
-  flipping = true;
-  time = 0;
 
-  flipcounter = 0;
   document.querySelector(
     "#moves"
   ).innerHTML = `Card(s) flipped: ${flipCounter}`;
@@ -143,6 +150,7 @@ function flipCard() {
       secondCard = this;
       if (firstCard.dataset.id != secondCard.dataset.id) {
         console.log("not a match");
+        updateScore(-2);
         unFlipCards();
       }
       return;
@@ -154,7 +162,10 @@ function flipCard() {
       );
       // Check if correct answer
       if (firstCard.dataset.id == thirdCard.dataset.id) winrar();
-      else unFlipCards();
+      else {
+        updateScore(-2);
+        unFlipCards();
+      }
 
       return;
 
@@ -164,13 +175,16 @@ function flipCard() {
 }
 
 function winrar() {
-  score++;
+  updateScore(5);
+  correctPairs++;
   clicks = 0;
 
-  const scoreElement = document.querySelector("#score");
-  scoreElement.innerHTML = `Current score: ${score}`;
-  if (score == finalScore)
+  if (correctPairs == finalScore) {
     document.querySelector("#gameOver").style.visibility = "visible";
+    document.querySelector(
+      "#finalScore"
+    ).innerHTML = `You scored ${score} points!`;
+  }
 
   clearInterval(myVar);
   reset();
