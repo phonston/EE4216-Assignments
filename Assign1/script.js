@@ -11,6 +11,7 @@ let finalScore;
 let flipping = false;
 let time;
 let myVar;
+
 /* ---------------------------- Helper Functions ---------------------------- */
 function updateScore(change) {
   score += change;
@@ -68,12 +69,27 @@ function resetHelper() {
   if (myVar) clearInterval(myVar);
 }
 
+//function to show popup
+function showPopup() {
+  document.querySelector("#popup").style.visibility = "visible";
+}
+
 /* ---------------------- Start of card game functions ---------------------- */
 
 function start() {
-  resetHelper();
   // Gets the number of cards from the set difficulty level
-  const cardNum = document.querySelector("#diffLevel").value;
+  let numberInput = document.querySelector("input").value;
+
+  // Check if the input is a multiple of 3 if not display error message
+  if (numberInput % 3 != 0) {
+    document.querySelector("#wrongInput").style.visibility = "visible";
+    return;
+  }
+  document.querySelector("#wrongInput").style.visibility = "hidden";
+
+  resetHelper();
+
+  const cardNum = numberInput;
   finalScore = cardNum / 3;
 
   const gameBody = document.querySelector("#gamebody");

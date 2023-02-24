@@ -25,18 +25,24 @@
 
     <div class="rules">
         <h2>Rules</h2>
-        <span>
-            For every pair matched you will gain 5 points, for every wrong pair you will lose 2 points.
-        </span>
+        <div style="display: flex; flex-direction: column;">      
+            <span>
+                1. For every pair matched you will gain 5 points, for every wrong pair you will lose 2 points.
+            </span>
+            <span>
+                2. A pair is equal to three cards with the same number.
+            </span>
+        </div>
     </div>
     <div class="gamewrapper">
-        <div>wow</div>
-        <select name="Difficulty level" id="diffLevel">
+        <span id="wrongInput" style="visibility:hidden">Please input a number that is a multiple of 3!</span>
+        <input placeholder="Multiple of 3"/>
+        <!-- <select name="Difficulty level" id="diffLevel">
             <option value="6">Easy</option>
             <option value="9">Medium</option>
             <option value="12">Hard</option>
             <option value="24">Insane</option>
-        </select>
+        </select> -->
         <button onclick="start()">Start Game</button>
         <div id="gamebody">
             <!-- Cards will be added, tracked and generated via the script -->
