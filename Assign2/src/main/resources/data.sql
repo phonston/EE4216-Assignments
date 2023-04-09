@@ -1,4 +1,4 @@
-/* ------------------------- Dumping data for tasks ------------------------- */
+/* ---------------------- Dumping dummy data for tasks ---------------------- */
 INSERT INTO
   Tasks(name)
 VALUES

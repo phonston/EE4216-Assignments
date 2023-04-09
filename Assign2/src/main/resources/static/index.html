@@ -8,40 +8,46 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
     />
     <style>
-    body {
-            width:100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-size: 300% 300%;
-            background-image: linear-gradient(-45deg, yellow 0%, yellow 25%, yellow 51%, #ff357f 100%);
-            -webkit-animation: AnimateBG 20s ease infinite;
-                    animation: AnimateBG 20s ease infinite;
+      body {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-size: 300% 300%;
+        background-image: linear-gradient(
+          -45deg,
+          yellow 0%,
+          yellow 25%,
+          yellow 51%,
+          #ff357f 100%
+        );
+        -webkit-animation: AnimateBG 20s ease infinite;
+        animation: AnimateBG 20s ease infinite;
+      }
+
+      @-webkit-keyframes AnimateBG {
+        0% {
+          background-position: 0% 50%;
         }
-        
-        @-webkit-keyframes AnimateBG {
-            0% {
-            background-position: 0% 50%;
-            }
-            50% {
-            background-position: 100% 50%;
-            }
-            100% {
-            background-position: 0% 50%;
-            }
+        50% {
+          background-position: 100% 50%;
         }
-        
-        @keyframes AnimateBG {
-            0% {
-            background-position: 0% 50%;
-            }
-            50% {
-            background-position: 100% 50%;
-            }
-            100% {
-            background-position: 0% 50%;
-            }
+        100% {
+          background-position: 0% 50%;
         }
+      }
+
+      @keyframes AnimateBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
       #app {
         padding: 5vh 2vw 5vh 2vw;
       }
@@ -99,7 +105,7 @@
         align-items: center;
         vertical-align: middle;
         margin-bottom: 10px;
-        padding: 15px;
+        padding: 20px;
       }
 
       .descCard > * {
@@ -123,7 +129,7 @@
         cursor: pointer;
         display: inline-block;
       }
-      
+
       .toggle-switch {
         display: inline-block;
         background: #ccc;
@@ -134,7 +140,8 @@
         vertical-align: middle;
         transition: background 0.25s;
       }
-      .toggle-switch:before, .toggle-switch:after {
+      .toggle-switch:before,
+      .toggle-switch:after {
         content: "";
       }
       .toggle-switch:before {
@@ -159,12 +166,12 @@
       .toggle-checkbox:checked + .toggle-switch:before {
         left: 30px;
       }
-      
+
       .toggle-checkbox {
         position: absolute;
         visibility: hidden;
       }
-      
+
       .toggle-label {
         margin-left: 5px;
         position: relative;
@@ -180,7 +187,12 @@
           <p class="h1 font-weight-bold">ToDo List</p>
           <div
             v-if="showNewNameInput"
-            
+            style="
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              margin: 20px;
+            "
           >
             <input
               type="text"
@@ -216,160 +228,265 @@
         </div>
 
         <!-- ---- the toggles allow the user to show/hide complete and incomplete tasks ---- -->
-        <div id="toggles" class="row" style="display: flex; flex-direction: row; justify-content: space-between; margin: 20px;">
-            <label class="toggle">
-                <input class="toggle-checkbox" type="checkbox" @click="showIncomplete = !showIncomplete">
-                <div class="toggle-switch"></div>
-                <span class="toggle-label">Show Incomplete tasks</span>
-            </label>
-            <label class="toggle">
-                <input class="toggle-checkbox" type="checkbox" @click="showComplete = !showComplete">
-                <div class="toggle-switch"></div>
-                <span class="toggle-label">Show Complete tasks</span>
-            </label>
+        <div
+          id="toggles"
+          class="row"
+          style="
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin: 20px;
+          "
+        >
+          <label class="toggle">
+            <input
+              class="toggle-checkbox"
+              type="checkbox"
+              @click="showIncomplete = !showIncomplete"
+            />
+            <div class="toggle-switch"></div>
+            <span class="toggle-label">Show Incomplete tasks</span>
+          </label>
+          <label class="toggle">
+            <input
+              class="toggle-checkbox"
+              type="checkbox"
+              @click="showComplete = !showComplete"
+            />
+            <div class="toggle-switch"></div>
+            <span class="toggle-label">Show Complete tasks</span>
+          </label>
         </div>
         <div class="container">
-            <!-- ---- the cards for incomplete tasks are shown here ---- -->
-          <div class="row" v-for="row in rows" v-if="showIncomplete">
-            <div class="card itemCard">
-              <div>
-                <div v-if="row.edit" style="display: flex; flex-direction: row">
-                  <input
-                    type="text"
-                    v-model="row.name"
-                    required
-                    class="form-control"
-                  />
+          <!-- ---- the cards for incomplete tasks are shown here ---- -->
+          <div v-if="showIncomplete">
+            <div v-for="row in pages[currentPage - 1]">
+              <div class="row card itemCard">
+                <div>
+                  <div
+                    v-if="row.edit"
+                    style="display: flex; flex-direction: row"
+                  >
+                    <input
+                      type="text"
+                      v-model="row.name"
+                      required
+                      class="form-control"
+                    />
+                    <button
+                      type="button"
+                      class="btn btn-success"
+                      v-if="row.edit"
+                      @click="row.edit=false; updateTask(row);"
+                    >
+                      Save
+                    </button>
+                  </div>
+                  <h5
+                    v-else
+                    class="card-title centered"
+                    :class="{ 'strikeThrough': row.completed }"
+                    style="padding-top: 10px"
+                  >
+                    {{row['name']}}
+                  </h5>
+                  <div v-if="row.completed">{{row['timer']}} seconds</div>
+                </div>
+                <div class="btn-group">
                   <button
                     type="button"
-                    class="btn btn-success"
-                    v-if="row.edit"
-                    @click="row.edit=false; updateTask(row);"
+                    class="btn btn-danger dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
                   >
-                    Save
+                    <span class="sr-only">Toggle Dropdown</span>
                   </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" @click="row.edit=true;"
+                      >Edit name</a
+                    >
+                    <a class="dropdown-item" @click="deleteTask(row)">Delete</a>
+                    <a class="dropdown-item" @click="row.visible = !row.visible"
+                      >Show/hide timer</a
+                    >
+                    <!-- <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Separated link</a> -->
+                  </div>
                 </div>
-                <h5
-                  v-else
-                  class="card-title centered"
-                  :class="{ 'strikeThrough': row.completed }"
-                  v-on:click.prevent="row.visible = !row.visible"
-                  style="padding-top: 10px"
-                >
-                  {{row['name']}}
-                </h5>
-                <div v-if="row.completed">{{row['timer']}} seconds</div>
-              </div>
-              <div class="btn-group">
-                <button
-                  type="button"
-                  class="btn btn-danger dropdown-toggle dropdown-toggle-split"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu">
-                  <a class="dropdown-item" @click="row.edit=true;">Edit name</a>
-                  <a class="dropdown-item" @click="deleteTask(row)">Delete</a>
-                  <!-- <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Separated link</a> -->
+
+                <div class="card descCard" v-if="row.visible">
+                  <div
+                    class="font-weight-bold"
+                    style="font-size: 20px"
+                    v-if="row.timer==0"
+                  >
+                    Measure the time
+                  </div>
+                  <div class="font-weight-bold" style="font-size: 20px" v-else>
+                    {{row.timer}} seconds
+                  </div>
+                  <div
+                    class="startbutton"
+                    v-on:click.prevent="row.timer==0 ? startTimer(row) : endTimer(row)"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="32"
+                      height="32"
+                      fill="currentColor"
+                      class="bi bi-play-fill"
+                      viewBox="0 0 15 15"
+                      v-if="row.timer==0||!row.completed"
+                    >
+                      <path
+                        d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"
+                      />
+                    </svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="32"
+                      height="32"
+                      fill="currentColor"
+                      class="bi bi-stop-fill"
+                      viewBox="0 0 15 15"
+                      v-else
+                    >
+                      <path
+                        d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z"
+                      />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="card descCard" v-if="row.visible">
-              <div
-                class="font-weight-bold"
-                style="font-size: 20px"
-                v-if="row.timer==0"
+            <div
+              id="page-navigation"
+              style="
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                margin: 20px;
+              "
+            >
+              <button type="button" class="btn" @click="currentPage = 1">
+                First Page
+              </button>
+              <button
+                type="button"
+                class="btn"
+                @click="currentPage > 1 ? currentPage-- : currentPage"
               >
-                Measure the time
-              </div>
-              <div class="font-weight-bold" style="font-size: 20px" v-else>
-                {{row.timer}} seconds
-              </div>
-              <div
-                class="startbutton"
-                v-on:click.prevent="row.timer==0 ? startTimer(row) : endTimer(row)"
+                Previous page
+              </button>
+              <div>{{currentPage}}</div>
+              <button
+                type="button"
+                class="btn"
+                @click="currentPage < totalPage? currentPage++ : currentPage"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="32"
-                  height="32"
-                  fill="currentColor"
-                  class="bi bi-play-fill"
-                  viewBox="0 0 15 15"
-                  v-if="row.timer==0||!row.completed"
-                >
-                  <path
-                    d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"
-                  />
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="32"
-                  height="32"
-                  fill="currentColor"
-                  class="bi bi-stop-fill"
-                  viewBox="0 0 15 15"
-                  v-else
-                >
-                    <path d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z"/>
-                </svg>
-              </div>
+                Next Page
+              </button>
+              <button
+                type="button"
+                class="btn"
+                @click="currentPage = totalPage"
+              >
+                Last Page
+              </button>
             </div>
           </div>
-            <!-- ---- the cards for complete tasks are shown here ---- -->
-          <div class="row" v-for="item in completed" v-if="showComplete">
-            <div class="card itemCard">
-              <div>
-                <div v-if="item.edit" style="display: flex; flex-direction: item">
-                  <input
-                    type="text"
-                    v-model="item.name"
-                    required
-                    class="form-control"
-                  />
+
+          <!-- ---- the cards for complete tasks are shown here ---- -->
+          <div v-if="showComplete">
+            <div
+              class="row"
+              v-for="item in completedPages[currentCompletedPage]"
+            >
+              <div class="card itemCard">
+                <div>
+                  <div
+                    v-if="item.edit"
+                    style="display: flex; flex-direction: item"
+                  >
+                    <input
+                      type="text"
+                      v-model="item.name"
+                      required
+                      class="form-control"
+                    />
+                    <button
+                      type="button"
+                      class="btn btn-success"
+                      v-if="item.edit"
+                      @click="item.edit=false; updateTask(item);"
+                    >
+                      Save
+                    </button>
+                  </div>
+                  <h5
+                    v-else
+                    class="card-title centered"
+                    :class="{ 'strikeThrough': item.completed }"
+                    style="padding-top: 10px"
+                  >
+                    {{item['name']}}
+                  </h5>
+                  <div v-if="item.completed">{{item['timer']}} seconds</div>
+                </div>
+                <div class="btn-group">
                   <button
                     type="button"
-                    class="btn btn-success"
-                    v-if="item.edit"
-                    @click="item.edit=false; updateTask(item);"
+                    class="btn btn-danger dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
                   >
-                    Save
+                    <span class="sr-only">Toggle Dropdown</span>
                   </button>
-                </div>
-                <h5
-                  v-else
-                  class="card-title centered"
-                  :class="{ 'strikeThrough': item.completed }"
-                  v-on:click.prevent="item.visible = !item.visible"
-                  style="padding-top: 10px"
-                >
-                  {{item['name']}}
-                </h5>
-                <div v-if="item.completed">{{item['timer']}} seconds</div>
-              </div>
-              <div class="btn-group">
-                <button
-                  type="button"
-                  class="btn btn-danger dropdown-toggle dropdown-toggle-split"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu">
-                  <a class="dropdown-item" @click="item.edit=true;">Edit name</a>
-                  <a class="dropdown-item" @click="deleteTask(item)">Delete</a>
-                  <!-- <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Separated link</a> -->
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" @click="item.edit=true;"
+                      >Edit name</a
+                    >
+                    <a class="dropdown-item" @click="deleteTask(item)"
+                      >Delete</a
+                    >
+                    <a class="dropdown-item" @click="row.visible = !row.visible"
+                      >Show/hide timer</a
+                    >
+                    <!-- <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Separated link</a> -->
+                  </div>
                 </div>
               </div>
             </div>
+            <div
+              id="page-navigation"
+              style="
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                margin: 20px;
+              "
+            >
+              <button
+                type="button"
+                class="btn"
+                @click="currentCompletedPage > 1 ? currentCompletedPage-- : currentCompletedPage"
+              >
+                Previous page
+              </button>
+              <div>{{currentCompletedPage}}</div>
+              <button
+                type="button"
+                class="btn"
+                @click="currentPage < totalPage? currentCompletedPage++ : currentCompletedPage"
+              >
+                Next page
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -393,22 +510,29 @@
       var app = new Vue({
         el: "#app",
         data: {
-            showIncomplete: false,
-            showComplete: false,
-            showNewNameInput: false,
-            rows: [],
-            completed: [],
-            runningIntervals: [],
-            newName: "",
-            editForm: {
-                id: "",
-                name: "",
-                timer: 0,
-                completed: false,
-                visible: false,
-                edit: false,
-            },
-            url: "http://localhost:8080/api/tasks",
+          perPage: 5,
+          currentPage: 1,
+          currentCompletedPage: 1,
+          totalPage: 1,
+          totalCompletedPage: 1,
+          showIncomplete: false,
+          showComplete: false,
+          showNewNameInput: false,
+          pages: [],
+          completedPages: [],
+          rows: [],
+          completed: [],
+          runningIntervals: [],
+          newName: "",
+          editForm: {
+            id: "",
+            name: "",
+            timer: 0,
+            completed: false,
+            visible: false,
+            edit: false,
+          },
+          url: "http://localhost:8080/api/tasks",
         },
         mounted() {
           this.getTasks();
@@ -437,10 +561,19 @@
                   }
                 });
 
-                this.renderComponent = false;
-                this.$nextTick(() => {
-                  this.renderComponent = true;
-                });
+                // divide the rows array into pages with 5 items per page
+                this.pages = [];
+                for (let i = 0; i < this.rows.length; i += 5) {
+                  this.pages.push(this.rows.slice(i, i + 5));
+                }
+                this.totalPage = this.pages.length;
+
+                // divide the completed array into pages with 5 items per page
+                this.completedPages = [];
+                for (let i = 0; i < this.completed.length; i += 5) {
+                  this.completedPages.push(this.completed.slice(i, i + 5));
+                }
+                this.totalCompletedPage = this.completedPages.length;
               });
             });
           },

@@ -1,0 +1,3 @@
+2023-04-09 19:51:57 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TASKS" already exists; SQL statement:
+CREATE TABLE tasks ( id int NOT NULL AUTO_INCREMENT, name varchar(100) NOT NULL, completed boolean DEFAULT FALSE, timer int DEFAULT 0, PRIMARY KEY (id) ) [42101-214]

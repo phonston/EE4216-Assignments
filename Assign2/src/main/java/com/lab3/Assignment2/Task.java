@@ -34,7 +34,6 @@ public class Task {
         this.completed = completed;
     }
 
-    // incase we want to set the timer
     public Task(int id, String name, boolean completed, int timer) {
         this.id = id;
         this.name = name;
