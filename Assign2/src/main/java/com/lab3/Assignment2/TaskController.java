@@ -30,22 +30,21 @@ public class TaskController {
     @RequestMapping(value = "/api/tasks/add", method = RequestMethod.POST)
     public String addTask(@RequestBody Task task) {
         String message = taskDao.addTask(task.getName());
-        // String message = "nice";
-        // return the message
+
         return message;
     }
 
     @RequestMapping(value = "/api/tasks/update/{id}", method = RequestMethod.PUT)
     public String updateTask(@RequestBody Task task, @PathVariable int id) {
         String message = taskDao.updateTask(task);
-        // return the message
+
         return message;
     }
 
     @RequestMapping(value = "/api/tasks/delete/{id}", method = RequestMethod.DELETE)
     public String deleteTask(@PathVariable int id) {
         String message = taskDao.deleteTask(id);
-        // return the message
+
         return message;
     }
 }

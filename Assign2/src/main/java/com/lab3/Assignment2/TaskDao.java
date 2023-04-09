@@ -10,7 +10,6 @@ public class TaskDao {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    // create a method to get all tasks from the database
     public ArrayList<Task> getAllTasks() {
 
         ArrayList<Task> tasks = new ArrayList<Task>();
