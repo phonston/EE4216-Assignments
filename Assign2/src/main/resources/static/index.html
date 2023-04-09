@@ -124,7 +124,27 @@
       <div id="app" class="container">
         <div id="top-bar">
           <p class="h1 font-weight-bold">ToDo List</p>
-          <div class="mybtn">
+          <div
+            v-if="showNewNameInput"
+            style="display: flex; flex-direction: row"
+          >
+            <input
+              type="text"
+              v-model="newName"
+              required
+              class="form-control"
+              placeholder="New Task"
+            />
+            <button
+              type="button"
+              class="btn btn-success"
+              v-if="showNewNameInput"
+              @click="addTask(newName); showNewNameInput = false;"
+            >
+              Save
+            </button>
+          </div>
+          <div class="mybtn" @click="showNewNameInput = !showNewNameInput;">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="30"
@@ -183,7 +203,7 @@
                 </button>
                 <div class="dropdown-menu">
                   <a class="dropdown-item" @click="row.edit=true;">Edit name</a>
-                  <a class="dropdown-item" href="#">Delete</a>
+                  <a class="dropdown-item" @click="deleteTask(row)">Delete</a>
                   <!-- <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="#">Separated link</a> -->
                 </div>
@@ -284,8 +304,10 @@
       var app = new Vue({
         el: "#app",
         data: {
+          showNewNameInput: false,
           rows: [],
           runningIntervals: [],
+          newName: "",
           editForm: {
             id: "",
             name: "",
@@ -325,19 +347,21 @@
                     return 0;
                   }
                 });
+                this.renderComponent = false;
+                this.$nextTick(() => {
+                  this.renderComponent = true;
+                });
               });
             });
           },
-          addTask() {
+          addTask(name) {
             fetch(this.url + "/add", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                name: this.editForm.name,
-                timer: this.editForm.timer,
-                completed: this.editForm.completed,
+                name: name,
               }),
             }).then((response) => {
               response.json().then((data) => {

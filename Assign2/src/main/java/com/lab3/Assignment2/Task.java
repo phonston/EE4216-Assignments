@@ -13,6 +13,13 @@ public class Task {
         this.completed = false;
     }
 
+    public Task(String name) {
+        this.id = 0;
+        this.timer = 0;
+        this.name = "";
+        this.completed = false;
+    }
+
     public Task(int id, String name) {
         this.id = id;
         this.timer = 0;
