@@ -40,8 +40,8 @@ public class TaskDao {
 
     public String updateTask(Task task) {
         try {
-            String sql = "UPDATE TASKS SET completed=?, timer=? WHERE id=?";
-            jdbcTemplate.update(sql, task.getCompleted(), task.getTimer(), task.getId());
+            String sql = "UPDATE TASKS SET name=?, completed=?, timer=? WHERE id=?";
+            jdbcTemplate.update(sql, task.getName(), task.getCompleted(), task.getTimer(), task.getId());
 
             return "Task updated successfully";
         } catch (Exception e) {

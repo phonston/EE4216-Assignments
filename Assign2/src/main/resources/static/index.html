@@ -144,16 +144,50 @@
           <div class="row" v-for="row in rows">
             <div class="card itemCard">
               <div>
+                <div v-if="row.edit" style="display: flex; flex-direction: row">
+                  <input
+                    type="text"
+                    v-model="row.name"
+                    required
+                    class="form-control"
+                  />
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    v-if="row.edit"
+                    @click="row.edit=false; updateTask(row);"
+                  >
+                    Save
+                  </button>
+                </div>
                 <h5
+                  v-else
                   class="card-title centered"
                   :class="{ 'strikeThrough': row.completed }"
                   v-on:click.prevent="row.visible = !row.visible"
+                  style="padding-top: 10px"
                 >
                   {{row['name']}}
                 </h5>
-                <div v-if="row.completed">{{row['timer']}}</div>
+                <div v-if="row.completed">{{row['timer']}} seconds</div>
               </div>
-              <input type="checkbox" />
+              <div class="btn-group">
+                <button
+                  type="button"
+                  class="btn btn-danger dropdown-toggle dropdown-toggle-split"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" @click="row.edit=true;">Edit name</a>
+                  <a class="dropdown-item" href="#">Delete</a>
+                  <!-- <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#">Separated link</a> -->
+                </div>
+              </div>
             </div>
 
             <div class="card descCard" v-if="row.visible">
@@ -230,7 +264,21 @@
                 </table> -->
       </div>
     </div>
-
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
       var app = new Vue({
@@ -244,6 +292,7 @@
             timer: 0,
             completed: false,
             visible: false,
+            edit: false,
           },
           url: "http://localhost:8080/api/tasks",
         },
@@ -262,6 +311,7 @@
                     timer: task.timer,
                     completed: task.completed,
                     visible: false,
+                    edit: false,
                   };
                 });
 
@@ -278,11 +328,46 @@
               });
             });
           },
+          addTask() {
+            fetch(this.url + "/add", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                name: this.editForm.name,
+                timer: this.editForm.timer,
+                completed: this.editForm.completed,
+              }),
+            }).then((response) => {
+              response.json().then((data) => {
+                console.log(data);
+                this.getTasks();
+              });
+            });
+          },
+          editTask(row) {
+            this.editForm.id = row.id;
+            this.editForm.name = row.name;
+            this.editForm.timer = row.timer;
+            this.editForm.completed = row.completed;
+
+            this.updateTask(row);
+          },
+          deleteTask(row) {
+            fetch(this.url + "/delete/" + row.id, {
+              method: "DELETE",
+            }).then((response) => {
+              response.json().then((data) => {
+                console.log(data);
+                this.getTasks();
+              });
+            });
+          },
           startTimer(row) {
             row.visible = true;
             row.timer = 0;
             let interval = setInterval(() => {
-              console.log(row.timer);
               row.timer++;
             }, 1000);
             this.runningIntervals.push(interval);
@@ -295,6 +380,8 @@
             this.updateTask(row);
           },
           updateTask(row) {
+            console.log("update called");
+            console.log(row);
             fetch(this.url + "/update/" + row.id, {
               method: "PUT",
               headers: {
